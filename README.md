@@ -64,7 +64,7 @@ py main.py
 
 ## License
 
-This project is licensed under the MIT License. Please refer to the ([LICENSE](https://github.com/Z3belek/MKV-to-HLS/blob/main/LICENSE.md)) file for more details.
+This project is licensed under the MIT License. Please refer to the ([LICENSE](https://github.com/Z3belek/MKV-to-HLS/blob/main/LICENSE)) file for more details.
 
 ## Contributions
 
