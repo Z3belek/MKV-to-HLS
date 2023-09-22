@@ -26,13 +26,13 @@ for archivo_mkv in archivos_mkv:
     # Nombre del archivo sin extensión
     nombre_base = os.path.splitext(archivo_mkv)[0]
 
-    print_colored(f"Procesando archivo: {archivo_mkv}...", Fore.YELLOW)
+    print_colored(f"Processing file: {archivo_mkv}...", Fore.YELLOW)
 
     # Crear directorio para cada archivo MKV
     if not os.path.exists(nombre_base):
         os.mkdir(nombre_base)
 
-    print_colored(f"Creando directorio para {nombre_base}...", Fore.GREEN)
+    print_colored(f"Creating directory for {nombre_base}...", Fore.GREEN)
 
     # Comando para extraer video en formato MP4 sin audio
     comando_video = (
@@ -42,7 +42,7 @@ for archivo_mkv in archivos_mkv:
     # Ejecutar el comando de extracción de video
     subprocess.run(comando_video, shell=True)
 
-    print_colored(f"Video extraído y guardado en {nombre_base}/{nombre_base}.mp4", Fore.GREEN)
+    print_colored(f"Video extracted and saved in {nombre_base}/{nombre_base}.mp4", Fore.GREEN)
 
     # Obtener información sobre las pistas de audio
     comando_info_audio = f"ffprobe -v quiet -print_format json -show_streams {archivo_mkv}"
@@ -69,7 +69,7 @@ for archivo_mkv in archivos_mkv:
     # Ejecutar los comandos de pistas de audio
     for i, comando_audio in enumerate(comandos_audio, start=1):
         subprocess.run(comando_audio, shell=True)
-        print_colored(f"Pista de audio {i} extraída y guardada en {nombre_base}/{nombre_audio}", Fore.GREEN)
+        print_colored(f"Audio track {i} extracted and saved in {nombre_base}/{nombre_audio}", Fore.GREEN)
 
     # Crear carpetas para las resoluciones
     resoluciones = [("1080p", "1920:1080", "1920x1080", 7000), ("720p", "1280:720", "1280x720", 4000), ("480p", "854:480", "854x480", 2000)]
@@ -78,7 +78,7 @@ for archivo_mkv in archivos_mkv:
         resolucion_dir = os.path.join(nombre_base, resolucion)
         os.mkdir(resolucion_dir)
 
-        print_colored(f"Creando carpeta para {resolucion}...", Fore.CYAN)
+        print_colored(f"Creating folder for {resolucion}...", Fore.CYAN)
 
         # Comando para convertir a HLS para cada resolución
         comando_hls = (f"ffmpeg -loglevel quiet -hwaccel cuda -i {nombre_base}.mp4 ")
@@ -115,7 +115,7 @@ for archivo_mkv in archivos_mkv:
         # Ejecutar el comando HLS
         subprocess.run(comando_hls, shell=True)
 
-        print_colored(f"Archivo HLS creado para {resolucion} en {resolucion}/{resolucion}.m3u8", Fore.GREEN)
+        print_colored(f"HLS file created for {resolucion} in {resolucion}/{resolucion}.m3u8", Fore.GREEN)
 
         # Salir del directorio del archivo MKV
         os.chdir("..")
@@ -128,15 +128,15 @@ for archivo_mkv in archivos_mkv:
         archivo_master.write(f"{resolucion}/{resolucion}.m3u8\n")
     archivo_master.close()
     
-    print_colored(f"Archivo master.m3u8 creado en {nombre_base}/master.m3u8", Fore.GREEN)
+    print_colored(f"The master.m3u8 file has been created in {nombre_base}/master.m3u8", Fore.GREEN)
 
-    # Eliminar archivos temporales
+    # Eliminar archivos de audio AAC
     for archivo_aac in archivos_aac:
         while True:
             if remove_file(f"{nombre_base}/{archivo_aac}"):
                 break  # Archivo eliminado con éxito
             else:
-                print(f"El archivo {nombre_base}/{archivo_aac} está en uso. Esperando 5 segundos...")
+                print(f"The file {nombre_base}/{archivo_aac} is in use. Waiting for 5 seconds...")
                 time.sleep(5)  # Esperar 5 segundos y volver a intentar
 
     # Eliminar el archivo de video MP4
@@ -144,7 +144,7 @@ for archivo_mkv in archivos_mkv:
         if remove_file(f"{nombre_base}/{nombre_base}.mp4"):
             break  # Archivo eliminado con éxito
         else:
-            print(f"El archivo {nombre_base}/{nombre_base}.mp4 está en uso. Esperando 5 segundos...")
+            print(f"The file {nombre_base}/{nombre_base}.mp4 is in use. Waiting for 5 seconds...")
             time.sleep(5)  # Esperar 5 segundos y volver a intentar
 
     # Eliminar el archivo MKV
@@ -152,11 +152,11 @@ for archivo_mkv in archivos_mkv:
         if remove_file(f"{archivo_mkv}"):
             break  # Archivo eliminado con éxito
         else:
-            print(f"El archivo {archivo_mkv} está en uso. Esperando 5 segundos...")
+            print(f"The file {archivo_mkv} is in use. Waiting for 5 seconds...")
             time.sleep(5)  # Esperar 5 segundos y volver a intentar
 
-    print_colored(f"Archivos eliminados: {nombre_base}.mp4, {', '.join(archivos_aac)} y {archivo_mkv}", Fore.RED)
+    print_colored(f"Deleted files: {nombre_base}.mp4, {', '.join(archivos_aac)} y {archivo_mkv}", Fore.RED)
 
-    print_colored(f"Se completó el procesamiento de {archivo_mkv}", Fore.YELLOW)
+    print_colored(f"Processing completed for {archivo_mkv}", Fore.YELLOW)
 
-print_colored("Proceso finalizado", Fore.YELLOW)
+print_colored("MKV file queue completed, all files have been converted to HLS.", Fore.YELLOW)

@@ -1,0 +1,2 @@
+colorama==0.4.6
+python-ffmpeg-video-streaming==0.1.15
