@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://zebelek.vercel.app/_next/static/media/Logo.5457373c.svg" alt="Icono de la Aplicación" width="100">
+  <img src="https://zebelek.vercel.app/favicon.svg" alt="Icono de la Aplicación" width="100">
 </p>
 
 <h1 align="center">ZBK | MKV to HLS</h1>
